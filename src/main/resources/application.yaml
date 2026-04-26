@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: apigw-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false
+      routes:
+        - id: ms-products-route
+          uri: lb://ms-products
+          predicates:
+            - Path=/ms-products/**
+          filters:
+            - StripPrefix=1
+      server:
+        webflux:
+          routes:
+            - id: ms-products-route-webflux
+              uri: lb://ms-products
+              predicates:
+                - Path=/ms-products/**
+              filters:
+                - StripPrefix=1
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: ${eureka_url:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+    hostname: ${EUREKA_HOST:localhost}
+
+getProduct:
+  url: http://ms-products/products/%s
+
+server:
+  port: 8762
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - gateway
