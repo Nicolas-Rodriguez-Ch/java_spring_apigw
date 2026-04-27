@@ -13,6 +13,12 @@ spring:
             - Path=/ms-products/**
           filters:
             - StripPrefix=1
+        - id: ms-orders-route
+          uri: lb://ms-orders
+          predicates:
+            - Path=/ms-orders/**
+          filters:
+            - StripPrefix=1
       server:
         webflux:
           routes:
@@ -20,6 +26,12 @@ spring:
               uri: lb://ms-products
               predicates:
                 - Path=/ms-products/**
+              filters:
+                - StripPrefix=1
+            - id: ms-orders-route-webflux
+              uri: lb://ms-orders
+              predicates:
+                - Path=/ms-orders/**
               filters:
                 - StripPrefix=1
 eureka:
